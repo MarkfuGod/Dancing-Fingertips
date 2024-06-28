@@ -1,20 +1,38 @@
-import pygame
-import image
+
 from settings import *
+import pygame
+import os
+import image
+import threading
+
+SCREEN_WIDTH = 800  # Example screen width
+SCREEN_HEIGHT = 600  # Example screen height
 
 class Background:
     def __init__(self):
-        self.images = []
-        for i in range(1,121):
-            self.images.append(image.load(f"Assets/background/{i}.png", 
-                                size=(SCREEN_WIDTH, SCREEN_HEIGHT),
-                                convert="default"))
-        self.image = self.images[0]
-        
-      #   This requires tearing down the picture using Library like Pillow
-      #   num_frames = image.get_num_frames()
+        self.images = [None] * 120  # Initialize a list to hold image surfaces
+        self.current_frame = 0
+        self.total_frames = 120
+        self.image = None
+        self.load_initial_frame()
+        self.load_images_async()
 
+    def load_initial_frame(self):
+        self.images[0] = pygame.image.load(os.path.join("Assets", "background", "1.png"))
+        self.image = self.images[0]
+
+    def load_images_async(self):
+        threading.Thread(target=self.load_images).start()
+
+    def load_images(self):
+        for i in range(1, self.total_frames):
+            self.images[i] = pygame.image.load(os.path.join("Assets", "background", f"{i+1}.png"))
+
+    def update(self):
+        self.current_frame = (pygame.time.get_ticks() // 100) % self.total_frames
+        if self.images[self.current_frame]:
+            self.image = self.images[self.current_frame]
 
     def draw(self, surface):
-        self.image = self.images[int(pygame.time.get_ticks()//100)%120]
+        self.update()
         image.draw(surface, self.image, (SCREEN_WIDTH//2, SCREEN_HEIGHT//2), pos_mode="center")
