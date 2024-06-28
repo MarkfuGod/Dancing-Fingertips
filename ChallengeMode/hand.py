@@ -11,6 +11,8 @@ class Hand:
         self.image_smaller = image.load("Assets/hand.png", size=(HAND_SIZE - 50, HAND_SIZE - 50))
         self.rect = pygame.Rect(SCREEN_WIDTH//2, SCREEN_HEIGHT//2, HAND_HITBOX_SIZE[0], HAND_HITBOX_SIZE[1])
         self.left_click = False
+        self.not_click_flag = True
+        self.player_gesture = ""
         #self.hand_tracking = HandTracking()
 
 
@@ -33,7 +35,8 @@ class Hand:
 
 
     def on_gesture(self, gestures): # return a list with all gestures that collide with the hand hitbox
-        return [gesture for gesture in gestures if self.rect.colliderect(gesture.rect)]
+        return [gesture for gesture in gestures if self.rect.colliderect(gesture.rect) and 
+                (gesture.gesture_str == self.player_gesture or gesture.gesture_str == "bomb")]
 
 
     def kill_gestures(self, gestures, score, sounds): # will kill the gestures that collide with the hand when the left mouse button is pressed
@@ -44,6 +47,7 @@ class Hand:
                 sounds["slap"].play()
                 if gesture_score < 0:
                     sounds["screaming"].play()
-        else:
             self.left_click = False
+        #else:
+            #self.left_click = False
         return score

@@ -93,8 +93,12 @@ class Game:
             self.spawn_gestures()
             (x, y) = self.hand_tracking.get_hand_center()
             self.hand.rect.center = (x, y)
-            self.hand.left_click = self.hand_tracking.hand_closed
-            print("Hand closed", self.hand.left_click)
+            if(self.hand.not_click_flag):
+                self.hand.left_click = (self.hand_tracking.hand_closed == True) and (self.hand.left_click == False)
+                self.hand.player_gesture = self.hand_tracking.gesture_str
+                self.hand.not_click_flag = False
+            self.hand.not_click_flag = not self.hand_tracking.hand_closed
+            print(f"Hand closed:{self.hand_tracking.hand_closed}",f"Gesture:{self.hand_tracking.gesture_str}")
             if self.hand.left_click:
                 self.hand.image = self.hand.image_smaller.copy()
             else:

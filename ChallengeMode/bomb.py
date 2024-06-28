@@ -16,6 +16,7 @@ class Bomb(Handgesture):
         self.images = [image.load(f"Assets/bomb/{nb}.png", size=size, flip=moving_direction=="right") for nb in range(1, 7)] # load the images
         self.current_frame = 0
         self.animation_timer = 0
+        self.gesture_str = "bomb"
         
 
     def kill(self, handgestures): # remove the handgesture from the list
