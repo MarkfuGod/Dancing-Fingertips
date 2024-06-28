@@ -25,7 +25,7 @@ ANIMATION_SPEED = 0.08 # the frame of the hand gestures will change every X sec
 
 # difficulty
 GAME_DURATION = 60 # the game will last X sec
-HANDGESTURES_SPAWN_TIME = 1
+HANDGESTURES_SPAWN_TIME = 2
 HANDGESTURES_MOVE_SPEED = {"min": 1, "max": 5}
 BOMB_PENALITY = 1 # will remove X of the score of the player (if he kills a bomb)
 

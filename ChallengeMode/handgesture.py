@@ -13,7 +13,11 @@ class Handgesture:
         moving_direction, start_pos = self.define_spawn_pos(size)
         # sprite
         self.rect = pygame.Rect(start_pos[0], start_pos[1], size[0]//1.4, size[1]//1.4)
-        self.images = [image.load("Assets/handgesture/handgesture.png", size=size, flip=moving_direction=="right")]
+        handgesture_lst = ['fist.png','gun.png',
+                           'two.png','thumbup.png','love.png']
+        self.gesture_str = random.choice(handgesture_lst)[:-4]
+        self.images = [image.load("Assets/handgesture/"+self.gesture_str+".png", 
+                                  size=size, flip=moving_direction=="right")]
         self.current_frame = 0
         self.animation_timer = 0
 
