@@ -16,15 +16,17 @@ HANDGESTURES_SIZES = (50, 38)
 HANDGESTURE_SIZE_RANDOMIZE = (1,2) # for each new hand gesture, it will multiply the size with an random value beteewn X and Y
 BOMB_SIZES = (50, 50)
 BOMB_SIZE_RANDOMIZE = (1.2, 1.5)
+MEDAL_SIZES = (245, 316)
 
 # drawing
 DRAW_HITBOX = False # will draw all the hitbox
 
 # animation
 ANIMATION_SPEED = 0.08 # the frame of the hand gestures will change every X sec
+MEDAL_POS = (SCREEN_WIDTH//3 + 80, SCREEN_HEIGHT//3 - 60)
 
 # difficulty
-GAME_DURATION = 60 # the game will last X sec
+GAME_DURATION = 10 # the game will last X sec
 HANDGESTURES_SPAWN_TIME = 2
 HANDGESTURES_MOVE_SPEED = {"min": 1, "max": 5}
 BOMB_PENALITY = 1 # will remove X of the score of the player (if he kills a bomb)

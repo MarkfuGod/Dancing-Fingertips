@@ -7,6 +7,7 @@ from hand import Hand
 from hand_tracking import HandTracking
 from handgesture import Handgesture
 from bomb import Bomb
+from animation import *
 import cv2
 import ui
 
@@ -14,7 +15,7 @@ class Game:
     def __init__(self, surface):
         self.surface = surface
         self.background = Background()
-
+        self.medal_animation = medal_ani()
         # Load camera
         self.cap = cv2.VideoCapture(0)
 
@@ -108,7 +109,9 @@ class Game:
                 gesture.move()
 
         else: # when the game is over
+            self.medal_animation.update(self.surface, self.score)
             if ui.button(self.surface, 540, "Continue", click_sound=self.sounds["slap"]):
+                self.medal_animation.medal_animation_index = 0
                 return "menu"
 
 
