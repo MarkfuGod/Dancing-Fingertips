@@ -9,16 +9,17 @@ SCREEN_WIDTH = 800  # Example screen width
 SCREEN_HEIGHT = 600  # Example screen height
 
 class Background:
-    def __init__(self):
+    def __init__(self,path):
         self.images = [None] * 120  # Initialize a list to hold image surfaces
         self.current_frame = 0
         self.total_frames = 120
         self.image = None
+        self.path = path
         self.load_initial_frame()
         self.load_images_async()
 
     def load_initial_frame(self):
-        self.images[0] = pygame.image.load(os.path.join("Assets", "background", "1.png"))
+        self.images[0] = pygame.image.load(os.path.join(self.path, "1.png"))
         self.image = self.images[0]
 
     def load_images_async(self):
@@ -26,7 +27,7 @@ class Background:
 
     def load_images(self):
         for i in range(1, self.total_frames):
-            self.images[i] = pygame.image.load(os.path.join("Assets", "background", f"{i+1}.png"))
+            self.images[i] = pygame.image.load(os.path.join(self.path, f"{i+1}.png"))
 
     def update(self):
         self.current_frame = (pygame.time.get_ticks() // 100) % self.total_frames
