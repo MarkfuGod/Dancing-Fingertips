@@ -1,11 +1,12 @@
 # Setup Python ----------------------------------------------- #
-import pygame
-import sys
 import os
+import sys
+import pygame
 from settings import *
 from game import Game
 from menu import Menu
-
+from extra import Extra
+from records import Records
 # Setup pygame/window --------------------------------------------- #
 os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (100,32) # windows position
 pygame.init()
@@ -27,8 +28,8 @@ state = "menu"
 # Creation -------------------------------------------------------- #
 game = Game(SCREEN)
 menu = Menu(SCREEN)
-
-
+extra = Extra(SCREEN)
+records = Records(SCREEN)
 
 # Functions ------------------------------------------------------ #
 def user_events():
@@ -49,8 +50,18 @@ def update():
         if menu.update() == "game":
             game.reset() # reset the game to start a new game
             state = "game"
+        elif menu.update() == "extra":
+            state = "extra"
+        elif menu.update() == "records":
+            state = "records"
     elif state == "game":
         if game.update() == "menu":
+            state = "menu"
+    elif state == "extra":
+        if extra.update() == "menu":
+            state = "menu"
+    elif state == "records":
+        if records.update() == "menu":
             state = "menu"
     pygame.display.update()
     mainClock.tick(FPS)

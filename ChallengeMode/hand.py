@@ -42,7 +42,7 @@ class Hand:
     def kill_gestures(self, gestures, score, sounds): # will kill the gestures that collide with the hand when the left mouse button is pressed
         if self.left_click: # if left click
             for gesture in self.on_gesture(gestures):
-                gesture_score = gesture.kill(gestures)
+                gesture_score = gesture.kill(gestures)*20
                 score += gesture_score
                 sounds["slap"].play()
                 if gesture_score < 0:

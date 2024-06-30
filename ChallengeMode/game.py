@@ -7,14 +7,19 @@ from hand import Hand
 from hand_tracking import HandTracking
 from handgesture import Handgesture
 from bomb import Bomb
+from medal_animation import *
+from record_plot import PlotRecord
+from record_date import sys_date
 import cv2
 import ui
 
 class Game:
     def __init__(self, surface):
         self.surface = surface
-        self.background = Background()
-
+        self.background = Background("Assets/Background")
+        self.medal_animation = medal_ani()
+        self.date = sys_date().get_date()
+        self.plot_record = PlotRecord()
         # Load camera
         self.cap = cv2.VideoCapture(0)
 
@@ -108,7 +113,13 @@ class Game:
                 gesture.move()
 
         else: # when the game is over
-            if ui.button(self.surface, 540, "Continue", click_sound=self.sounds["slap"]):
+            self.medal_animation.update(self.surface, self.score)
+            ui.draw_text(self.surface, f"{self.score}", (MEDAL_ANIMATION_POS[0]+MEDAL_SIZE[0]//2,MEDAL_ANIMATION_POS[1]+MEDAL_SIZE[1]+30), 
+                     COLORS[MEDAL], font=FONTS["medium"],
+                     shadow=True, shadow_color=(255,255,255), pos_mode="center")
+            if ui.button(self.surface, pos_y=540, text="Continue", click_sound=self.sounds["slap"]):
+                self.plot_record.write_file(self.date, self.score)
+                self.medal_animation.medal_animation_index = 0
                 return "menu"
 
 
