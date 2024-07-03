@@ -120,7 +120,7 @@ class Game:
             if ui.button(self.surface, pos_y=540, text="Continue", click_sound=self.sounds["slap"]):
                 self.plot_record.write_file(self.date, self.score)
                 self.medal_animation.medal_animation_index = 0
-                return "menu"
+                return "mode"
 
 
         cv2.imshow("Frame", self.frame)

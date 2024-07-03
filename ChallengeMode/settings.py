@@ -4,6 +4,7 @@ WINDOW_NAME = "HandGesture Master"
 GAME_TITLE = WINDOW_NAME
 EXTRA_TITLE = "Medal Collectoin"
 RECORDS_TITLE = "Records"
+MODE_TITLE = "Choose Mode"
 MEDAL = "title"
 MEDAL_NAMES = ["bronze","silver","gold"]
 SCORES = ["60","80","100"]
@@ -30,12 +31,16 @@ HANDGESTURE_SIZE_RANDOMIZE = (1,2) # for each new hand gesture, it will multiply
 BOMB_SIZES = (50, 50)
 BOMB_SIZE_RANDOMIZE = (1.2, 1.5)
 MEDAL_SIZE = (245, 316)
+MODE_SIZE = (329,193)
 
 #positions
 DEFAULT_BOTTON_POS_X = SCREEN_WIDTH//2 - BUTTONS_SIZES[0]//2
 MEDAL_POS = (SCREEN_WIDTH//3-280, SCREEN_HEIGHT//3)
+MODE_POS = (SCREEN_WIDTH//3-400, SCREEN_HEIGHT//3)
 MEDAL_POS_X_INC = 350
 MEDAL_POS_Y_INC = 200
+MODE_POS_X_INC = 450
+MODE_POS_Y_INC = 200
 # drawing
 DRAW_HITBOX = False # will draw all the hitbox
 
@@ -44,7 +49,7 @@ ANIMATION_SPEED = 0.08 # the frame of the hand gestures will change every X sec
 MEDAL_ANIMATION_FRAMES = 5
 MEDAL_ANIMATION_POS = (SCREEN_WIDTH//3 + 80, SCREEN_HEIGHT//3 - 60)
 # difficulty
-GAME_DURATION = 60 # the game will last X sec
+GAME_DURATION = 10 # the game will last X sec
 HANDGESTURES_SPAWN_TIME = 2
 HANDGESTURES_MOVE_SPEED = {"min": 1, "max": 5}
 BOMB_PENALITY = 1 # will remove X of the score of the player (if he kills a bomb)

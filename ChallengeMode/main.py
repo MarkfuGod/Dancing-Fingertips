@@ -3,6 +3,7 @@ import os
 import sys
 import pygame
 from settings import *
+from game_mode import Mode
 from game import Game
 from menu import Menu
 from extra import Extra
@@ -26,7 +27,8 @@ pygame.mixer.music.play(-1)
 state = "menu"
 
 # Creation -------------------------------------------------------- #
-game = Game(SCREEN)
+mode = Mode(SCREEN)
+challenge = Game(SCREEN)
 menu = Menu(SCREEN)
 extra = Extra(SCREEN)
 records = Records(SCREEN)
@@ -46,17 +48,24 @@ def user_events():
 
 def update():
     global state
-    if state == "menu":
-        if menu.update() == "game":
-            game.reset() # reset the game to start a new game
-            state = "game"
+    if state == "mode":
+        if mode.update() == "menu":
+            state = "menu"
+        elif mode.update() == "challenge":
+            challenge.reset() # reset the game to start a new game
+            print(state)
+            state = "challenge"
+        
+    elif state == "menu":
+        if menu.update() == "mode":
+            state = "mode"
         elif menu.update() == "extra":
             state = "extra"
         elif menu.update() == "records":
             state = "records"
-    elif state == "game":
-        if game.update() == "menu":
-            state = "menu"
+    elif state == "challenge":
+        if challenge.update() == "mode":
+            state = "mode"
     elif state == "extra":
         if extra.update() == "menu":
             state = "menu"
