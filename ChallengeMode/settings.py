@@ -12,7 +12,8 @@ SCREEN_WIDTH, SCREEN_HEIGHT = 1200, 700
 
 FPS = 90
 DRAW_FPS = True
-
+#commands
+SHIFT_NORMAL_MODE = "cd ../NormalMode & python ./main.py"
 #on/off
 MEDAL_GET = [1,1,1]
 with open("Assets/medal/status.txt", "r") as f:

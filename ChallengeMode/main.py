@@ -2,6 +2,7 @@
 import os
 import sys
 import pygame
+import subprocess
 from settings import *
 from game_mode import Mode
 from game import Game
@@ -53,8 +54,10 @@ def update():
             state = "menu"
         elif mode.update() == "challenge":
             challenge.reset() # reset the game to start a new game
-            print(state)
             state = "challenge"
+        elif mode.update() == "normal":
+            subprocess.run(SHIFT_NORMAL_MODE,shell=True)
+            state = "mode"
         
     elif state == "menu":
         if menu.update() == "mode":
@@ -66,6 +69,9 @@ def update():
     elif state == "challenge":
         if challenge.update() == "mode":
             state = "mode"
+    #elif state == "normal":
+        #if normal.update() == "mode":
+            #state = "mode"
     elif state == "extra":
         if extra.update() == "menu":
             state = "menu"
