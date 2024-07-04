@@ -22,7 +22,7 @@ class Menu:
     def update(self):
         self.draw()
         if ui.button(self.surface, pos_y=200, text="START", click_sound=self.click_sound):
-            return "game"
+            return "mode"
 
         if ui.button(self.surface, pos_y=200+BUTTONS_SIZES[1]*1.5, text="EXTRA", click_sound=self.click_sound):
             return "extra"
