@@ -66,7 +66,8 @@ class Enemy(pygame.sprite.Sprite):
         self.rect.x += 5
 
     def update(self):
-
+        if self.rect.x > 1250:
+            self.state = False
         if not self.frozen:
             self.cross_line()
 
@@ -92,7 +93,8 @@ class Enemy(pygame.sprite.Sprite):
         self.surface.blit(self.image, self.rect)
 
     def remove_from_group(self):
-        self.kill()  
+        #self.kill()  
+        self.state = False
 
     def unfreeze(self):
         if time.time() - self.frozen_time > FROZEN_INTERVAL:
@@ -100,14 +102,14 @@ class Enemy(pygame.sprite.Sprite):
     def unfire(self):
         if time.time() - self.fired_time > FIRE_INTERVAL:
             self.fired = False
-            self.kill()
+            self.state = False
 
 class EnemyHandle(pygame.sprite.Sprite):
 
     def __init__(self, surface):
         super().__init__()
     
-        self.enemy_number = 0
+        #self.enemy_number = 0
 
         self.enemy_appear_speed = 6000
 
@@ -121,6 +123,7 @@ class EnemyHandle(pygame.sprite.Sprite):
         self.enemy_total = int((self.scrollBar.fire_num + self.scrollBar.golden_num / 2) * random.uniform(0.8, 0.9))
         self.collision = Collision()
         self.surface = surface
+        self.enemy_number_total = self.enemy_total
     def enemy_enchanted_handle(self, ball):
         self.collision.collide_with_element(ball, self.enemy_list)
 
@@ -132,7 +135,8 @@ class EnemyHandle(pygame.sprite.Sprite):
 
         if not enemy.state:
             self.enemy_list.remove(enemy)
-
+            return 1
+        return 0
     def try_add_enemy(self):
 
         current_time = pygame.time.get_ticks()
@@ -159,13 +163,15 @@ class EnemyHandle(pygame.sprite.Sprite):
 
         self.enemy_list.draw(surface)
         collision.Collision.enemy_turned(self.collision, self.enemy_list)
+        count = 0
         for enemy in self.enemy_list:
             if enemy.cross_line():
                 return -1
-            self.remove_enemy(enemy)
+            if self.remove_enemy(enemy) == 1:
+                count = count + 1
         if self.enemy_total == 0 and len(self.enemy_list) == 0:
-            return 1
-        return 0
+            return -2
+        return count
     def reset(self):
         self.enemy_list.empty()  
         self.enemy_total = int((self.scrollBar.fire_num + self.scrollBar.golden_num / 2) * random.uniform(0.8, 0.9))

@@ -16,13 +16,14 @@ class Collision:
             if Ball.get_card_type(ball) == 'card_golden' and not enemy.collided and not enemy.enchanted:
                 enemy.enchanted = True
                 ball.clear_image()
-                game.score += 20
+                #game.score += 20
                 if enemy.frozen:  
                     enemy.frozen = False  
             elif Ball.get_card_type(ball) == 'card_fire':
                 enemy.fired = True
                 enemy.fired_time = time.time()
-                game.score += 20
+                #game.score += 20
+                #enemy.state = False
                 ball.clear_image()
                 if enemy.frozen:  
                     enemy.frozen = False  

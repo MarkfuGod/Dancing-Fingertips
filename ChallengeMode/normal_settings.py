@@ -25,6 +25,8 @@ LANE_SIZES = (1000, 160)
 BALL_SIZE = (60, 60)
 FIRE_SIZE = (32, 57)
 DIZZY_SIZE = (99, 39)
+PROCESS_LINE_SIZE = (500, 55)
+PROCESS_LINE_CONTENT_SIZE = (480, 30)
 # drawing
 DRAW_HITBOX = False  # will draw all the hitbox
 
@@ -54,14 +56,16 @@ FONTS = {"small": pygame.font.Font("Silver.ttf", 18), "medium": pygame.font.Font
          "big": pygame.font.Font("Silver.ttf", 120)}
 LANE_COORDINATE = [(1250, 180), (1250, 335), (1250, 490)]
 CART_COORDINATE = [(250, 180), (250, 335), (250, 490)]
+PROCESS_LINE_POS = (20, 650)
+PROCESS_LINE_CONTENT_POS = (30, 660)
 # lane
 LANE_VEL = 155
 HEXAGON_INDEX = 4
 LANE_X = 100
 LANE_Y = 160
-LANE_RECT1 = pygame.Rect(350, 180, 200, 155)
-LANE_RECT2 = pygame.Rect(350, 335, 200, 155)
-LANE_RECT3 = pygame.Rect(350, 490, 200, 155)
+LANE_RECT1 = pygame.Rect(350, 180, 200, 100)
+LANE_RECT2 = pygame.Rect(350, 335, 200, 100)
+LANE_RECT3 = pygame.Rect(350, 490, 200, 100)
 # screen
 background = pygame.image.load("NormalAssets/background1.png")
 
