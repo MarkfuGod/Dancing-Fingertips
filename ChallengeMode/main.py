@@ -9,6 +9,13 @@ from game import Game
 from menu import Menu
 from extra import Extra
 from records import Records
+from hexagon import *
+from lane import Lane
+from ball import BallHandle
+from enemy import EnemyHandle
+from scroll_bar import ScrollBar
+from normal_settings import LANE_X, LANE_Y, LANE_VEL
+from normal_main  import NormalMode
 # Setup pygame/window --------------------------------------------- #
 os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (100,32) # windows position
 pygame.init()
@@ -33,6 +40,8 @@ challenge = Game(SCREEN)
 menu = Menu(SCREEN)
 extra = Extra(SCREEN)
 records = Records(SCREEN)
+#Initiation of NormalMode
+normal = NormalMode()
 
 # Functions ------------------------------------------------------ #
 def user_events():
@@ -56,7 +65,7 @@ def update():
             challenge.reset() # reset the game to start a new game
             state = "challenge"
         elif mode.update() == "normal":
-            subprocess.run(SHIFT_NORMAL_MODE,shell=True)
+            normal.main()
             state = "mode"
         
     elif state == "menu":
