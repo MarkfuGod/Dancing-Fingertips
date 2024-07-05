@@ -60,26 +60,12 @@ def wait_for_restart(screen, game):
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if rect1.collidepoint(pygame.mouse.get_pos()):
-                    # pygame.quit()
-                    # sys.exit()
+                    
                     restart_game(game)  # Assuming restart_game is properly defined to reset the game
                     flag = False
                 elif rect2.collidepoint(pygame.mouse.get_pos()):
-                    # Setup pygame/window --------------------------------------------- #
-                    os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (100, 32)  # windows position
-                    pygame.init()
-                    pygame.display.set_caption(WINDOW_NAME)
-                    SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
-
-                    mainClock = pygame.time.Clock()
-
-                    # Fonts ----------------------------------------------------------- #
-                    fps_font = pygame.font.SysFont("Silver.ttf", 22)
-
-                    # Music ----------------------------------------------------------- #
-                    pygame.mixer.music.load("Assets/Sounds/background.mp3")
-                    pygame.mixer.music.set_volume(MUSIC_VOLUME)
-                    pygame.mixer.music.play(-1)
+                    pygame.quit()
+                    sys.exit()
                 elif rect3.collidepoint(pygame.mouse.get_pos()):
                     print(3)
 
