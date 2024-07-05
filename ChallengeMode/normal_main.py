@@ -2,7 +2,7 @@
 import sys
 import os
 
-import ui
+import normal_ui as ui
 from normal_settings import *
 from lane import Lane
 from enemy import EnemyHandle
@@ -57,7 +57,7 @@ class NormalMode():
 
         scroll_bar = ScrollBar()
         ball_handle = BallHandle()
-        enemy_handle = EnemyHandle()
+        enemy_handle = EnemyHandle(surface=self.SCREEN)
         game = Game(self.SCREEN, ball_handle, enemy_handle, scroll_bar)
 
         # Loop ------------------------------------------------------------ #

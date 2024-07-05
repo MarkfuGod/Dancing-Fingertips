@@ -1,11 +1,12 @@
+import time
+
 import pygame
-
+import  image
 from ball import Ball
-
-
+from normal_settings import  ENEMY_SIZES
 class Collision:
     @staticmethod
-    def collide_with_element(ball, enemy_group,game):
+    def collide_with_element(ball, enemy_group, game):
         """
         detect collision between ball and enemy
         
@@ -15,17 +16,19 @@ class Collision:
             if Ball.get_card_type(ball) == 'card_golden' and not enemy.collided and not enemy.enchanted:
                 enemy.enchanted = True
                 ball.clear_image()
-                game.score += 10  
+                game.score += 20
                 if enemy.frozen:  
                     enemy.frozen = False  
             elif Ball.get_card_type(ball) == 'card_fire':
-                enemy.kill()  
-                game.score += 10  
+                enemy.fired = True
+                enemy.fired_time = time.time()
+                game.score += 20
                 ball.clear_image()
                 if enemy.frozen:  
                     enemy.frozen = False  
             elif Ball.get_card_type(ball) == 'card_ice' and not enemy.frozen:
                 enemy.frozen = True
+                enemy.frozen_time = time.time()
                 ball.clear_image()
             elif Ball.get_card_type(ball) == 'card_ground' and ball.effected_by_card_ground and enemy.affected_by_card_ground:
                 if ball.rect.x >= 1050:  
@@ -44,6 +47,15 @@ class Collision:
                     enemy.move_right()
                 
         return False
+
+    @staticmethod
+    def collide_with_cart(cart,  enemy_group):
+        collide_enemies = pygame.sprite.spritecollide(cart, enemy_group, False)
+        for enemy in collide_enemies:
+            enemy.kill()
+            if not cart.collided:
+                cart.collided = True
+
 
     def enemy_turned(self, enemy_group):
         for enemy in enemy_group:

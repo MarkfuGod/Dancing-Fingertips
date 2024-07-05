@@ -11,8 +11,8 @@ from normal_hand_tracking import HandTracking
 import cv2
 from scroll_bar import ScrollBar
 from normal_settings import *
-
-
+from cart import Cart
+from cart import  CartHandle
 class Game:
     def __init__(self, surface, ball_handle, enemy_handle, scroll_bar):
         self.which_card = None
@@ -27,7 +27,8 @@ class Game:
         self.scroll_bar = scroll_bar
         self.enemy_handle = enemy_handle
         self.ball_handle = ball_handle
-
+        self.carts_handle = CartHandle(surface)
+        self.carts_handle.reset()
         # Load camera
         self.cap = cv2.VideoCapture(0)
         self.drag = Drag()
@@ -42,7 +43,8 @@ class Game:
         self.game_start_time = time.time()
         self.ball_handle.reset()
         self.enemy_handle.reset()  
-        self.scroll_bar.reset()  
+        self.scroll_bar.reset()
+        self.carts_handle.reset()
         self.surface.fill((255, 255, 255))
 
     def draw_score(self):
@@ -84,6 +86,9 @@ class Game:
             end.show_victory_screen(surface, self)
         elif enemy_handle.update(surface) == -1:
             end.show_defeat_screen(surface, self)
+        self.carts_handle.update()
+        for cart in self.carts_handle.cart_list:
+            self.collision.collide_with_cart(cart, enemy_handle.enemy_list)
 
         self.draw()
 

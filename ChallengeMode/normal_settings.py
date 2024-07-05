@@ -23,7 +23,8 @@ CARD_SIZES = (100, 120)
 HEXAGON_SIZES = (100, 100)
 LANE_SIZES = (1000, 160)
 BALL_SIZE = (60, 60)
-
+FIRE_SIZE = (32, 57)
+DIZZY_SIZE = (99, 39)
 # drawing
 DRAW_HITBOX = False  # will draw all the hitbox
 
@@ -35,7 +36,8 @@ GAME_DURATION = 60  # the game will last X sec
 HANDGESTURES_SPAWN_TIME = 1
 HANDGESTURES_MOVE_SPEED = {"min": 1, "max": 5}
 BOMB_PENALITY = 1  # will remove X of the score of the player (if he kills a bomb)
-
+FROZEN_INTERVAL = 10
+FIRE_INTERVAL = 1
 # colors
 COLORS = {"title": (38, 61, 39), "score": (38, 61, 39), "timer": (38, 61, 39),
           "buttons": {"default": (56, 67, 209), "second": (87, 99, 255),
@@ -51,13 +53,15 @@ pygame.font.init()
 FONTS = {"small": pygame.font.Font("Silver.ttf", 18), "medium": pygame.font.Font("Silver.ttf", 72),
          "big": pygame.font.Font("Silver.ttf", 120)}
 LANE_COORDINATE = [(1250, 180), (1250, 335), (1250, 490)]
-
+CART_COORDINATE = [(250, 180), (250, 335), (250, 490)]
 # lane
 LANE_VEL = 155
 HEXAGON_INDEX = 4
 LANE_X = 100
 LANE_Y = 160
-
+LANE_RECT1 = pygame.Rect(350, 180, 200, 155)
+LANE_RECT2 = pygame.Rect(350, 335, 200, 155)
+LANE_RECT3 = pygame.Rect(350, 490, 200, 155)
 # screen
 background = pygame.image.load("NormalAssets/background1.png")
 

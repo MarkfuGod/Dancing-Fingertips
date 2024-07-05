@@ -37,7 +37,7 @@ class Ball(pygame.sprite.Sprite):
     def move_right(self):
 
         
-        self.rect.x += 5
+        self.rect.x += 20
         print("------------------------------")
         print(str(self.card_move_speed))
         print("move" + str(self.rect.x))

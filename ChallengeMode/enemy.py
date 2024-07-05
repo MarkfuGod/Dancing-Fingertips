@@ -2,15 +2,15 @@ import random
 
 import collision
 import image
+import time
 from collision import *
 from scroll_bar import ScrollBar
 from normal_settings import *
 
 
 
-
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, surface):
         super().__init__()
         self.enemy_speed = 1
         self.enemy_animation_index = 0
@@ -32,12 +32,14 @@ class Enemy(pygame.sprite.Sprite):
         self.collided = False
 
         self.enchanted = False
-
+        self.fired = False
+        self.frozen_time = 0
+        self.fired_time = 0
         self.enchanted_collided = False
         self.frozen = False  
         self.immune = False  
         self.affected_by_card_ground = True
-
+        self.surface = surface
     def cross_line(self):
 
         if self.rect.x <= 100:
@@ -61,7 +63,7 @@ class Enemy(pygame.sprite.Sprite):
         self.rect.x += self.enemy_speed
 
     def move_right(self):
-        self.rect.x += 5  
+        self.rect.x += 5
 
     def update(self):
 
@@ -73,28 +75,43 @@ class Enemy(pygame.sprite.Sprite):
                     self.enemy_move_left()
                 else:
                     self.enemy_move_right()
-
-    def draw(self, surface):
-
-        surface.blit(self.image, self.rect)
+        else:
+            frozen_img = image.load(f"NormalAssets/Collision_SE/frozen.png", size=ENEMY_SIZES)
+            self.surface.blit(frozen_img, self.rect)
+            self.unfreeze()
+        if self.fired:
+            fired_imgs = [image.load(f"NormalAssets/Collision_SE/fire{i}.png", size=FIRE_SIZE)
+                          for i in range(1,4)]
+            fired_img = fired_imgs[(pygame.time.get_ticks() // 100) % 3]
+            self.surface.blit(fired_img, (self.rect.x+23,self.rect.y))
+            self.unfire()
+        if self.enchanted:
+            enchanted_img = image.load(f"NormalAssets/Collision_SE/dizzy.png", size=DIZZY_SIZE)
+            self.surface.blit(enchanted_img, (self.rect.x + 13, self.rect.y-12))
+    def draw(self):
+        self.surface.blit(self.image, self.rect)
 
     def remove_from_group(self):
         self.kill()  
 
     def unfreeze(self):
-        self.frozen = False  
-
+        if time.time() - self.frozen_time > FROZEN_INTERVAL:
+            self.frozen = False
+    def unfire(self):
+        if time.time() - self.fired_time > FIRE_INTERVAL:
+            self.fired = False
+            self.kill()
 
 class EnemyHandle(pygame.sprite.Sprite):
 
-    def __init__(self):
+    def __init__(self, surface):
         super().__init__()
     
         self.enemy_number = 0
 
-        self.enemy_appear_speed = 3000
+        self.enemy_appear_speed = 6000
 
-        self.enemy_interval = random.randint(2000, self.enemy_appear_speed)
+        self.enemy_interval = random.randint(4000, self.enemy_appear_speed)
 
         self.last_appear_time = pygame.time.get_ticks()
 
@@ -103,7 +120,7 @@ class EnemyHandle(pygame.sprite.Sprite):
 
         self.enemy_total = int((self.scrollBar.fire_num + self.scrollBar.golden_num / 2) * random.uniform(0.8, 0.9))
         self.collision = Collision()
-
+        self.surface = surface
     def enemy_enchanted_handle(self, ball):
         self.collision.collide_with_element(ball, self.enemy_list)
 
@@ -121,7 +138,7 @@ class EnemyHandle(pygame.sprite.Sprite):
         current_time = pygame.time.get_ticks()
         if self.enemy_total > 0 and current_time - self.last_appear_time >= self.enemy_interval:
             self.last_appear_time = current_time
-            self.add_enemy(Enemy())
+            self.add_enemy(Enemy(surface=self.surface))
 
     def add_enemy(self, enemy):
 
@@ -139,6 +156,7 @@ class EnemyHandle(pygame.sprite.Sprite):
 
         self.try_add_enemy()
         self.enemy_list.update()
+
         self.enemy_list.draw(surface)
         collision.Collision.enemy_turned(self.collision, self.enemy_list)
         for enemy in self.enemy_list:
