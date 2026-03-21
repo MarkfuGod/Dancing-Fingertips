@@ -38,10 +38,10 @@ const GameAssets = (() => {
     mode_challenge: `${BASE_CH}/Mode/challenge.png`,
     mode_normal:    `${BASE_CH}/Mode/normal.png`,
 
-    // Background frames are NOT listed here because the 120-frame PNG
-    // sequences are not committed to the repo. background.js uses a
-    // procedural animated gradient fallback when these are absent.
-    // If you do commit the frames, add them back with makeFrames().
+    // Background frames – folder is lowercase 'background' (case-sensitive on GitHub Pages)
+    ...makeFrames('bg',      `${BASE_CH}/background/`,         120),
+    // Background_blurred not in repo – bg_blur keys will return null → procedural fallback
+    ...makeFrames('bg_blur', `${BASE_CH}/Background_blurred/`, 120),
 
     // normal mode assets
     hexagon:       `${BASE_NM}/hexagon.png`,
@@ -106,6 +106,7 @@ const GameAssets = (() => {
     ...Array.from({length:10},(_,i)=>`medal_silver_${i+1}`),
     ...Array.from({length:10},(_,i)=>`medal_gold_${i+1}`),
     'mode_challenge','mode_normal',
+    'bg_1','bg_2','bg_3',   // first few frames for instant background on load
     'hexagon','scroll_bar',
     'card_ice','card_fire','card_golden','card_ground',
     'ball_ice','ball_fire','ball_golden','ball_ground',
