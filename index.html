@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dancing Fingertips</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      overflow: hidden;
+      font-family: 'Cinzel', serif;
+    }
+    #gameCanvas {
+      display: block;
+      cursor: none;
+      image-rendering: pixelated;
+    }
+    #videoElement { display: none; }
+
+    #cameraPreview {
+      position: fixed;
+      bottom: 12px;
+      right: 12px;
+      width: 200px;
+      height: 112px;
+      border: 2px solid rgba(255,255,255,0.4);
+      border-radius: 10px;
+      overflow: hidden;
+      display: none;
+      background: #000;
+      z-index: 50;
+    }
+    #cameraCanvas {
+      width: 200px;
+      height: 112px;
+      transform: scaleX(-1);
+    }
+
+    #loadingOverlay {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(135deg, #0a0a1a 0%, #1a0a2e 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      z-index: 200;
+      transition: opacity 0.5s ease;
+    }
+    #loadingOverlay.hidden { opacity: 0; pointer-events: none; }
+
+    #loadingTitle {
+      font-size: 3.5em;
+      font-weight: 900;
+      color: #00e676;
+      text-shadow: 0 0 30px rgba(0,230,118,0.6);
+      margin-bottom: 12px;
+      letter-spacing: 4px;
+    }
+    #loadingSubtitle {
+      font-size: 1em;
+      color: #aaa;
+      margin-bottom: 40px;
+      letter-spacing: 2px;
+    }
+    #loadingBar {
+      width: 340px;
+      height: 6px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 3px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+    #loadingFill {
+      height: 100%;
+      background: linear-gradient(90deg, #00e676, #00bcd4);
+      border-radius: 3px;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+    #loadingStatus {
+      font-size: 0.85em;
+      color: #888;
+      letter-spacing: 1px;
+      margin-bottom: 40px;
+    }
+    #startBtn {
+      display: none;
+      padding: 16px 50px;
+      font-size: 1.1em;
+      font-family: 'Cinzel', serif;
+      font-weight: 700;
+      background: linear-gradient(135deg, #00e676, #00bcd4);
+      color: #000;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      letter-spacing: 3px;
+      box-shadow: 0 4px 20px rgba(0,230,118,0.4);
+      transition: transform 0.1s, box-shadow 0.1s;
+    }
+    #startBtn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 30px rgba(0,230,118,0.6);
+    }
+    #startBtn:active { transform: translateY(0); }
+
+    #gestureGuide {
+      position: fixed;
+      top: 12px;
+      left: 12px;
+      background: rgba(0,0,0,0.7);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 10px;
+      padding: 10px 14px;
+      color: white;
+      font-size: 12px;
+      display: none;
+      z-index: 50;
+      line-height: 1.8;
+    }
+    #gestureGuide b { color: #00e676; }
+  </style>
+</head>
+<body>
+
+  <div id="loadingOverlay">
+    <div id="loadingTitle">DANCING FINGERTIPS</div>
+    <div id="loadingSubtitle">HAND GESTURE GAME</div>
+    <div id="loadingBar"><div id="loadingFill"></div></div>
+    <div id="loadingStatus">Loading assets...</div>
+    <button id="startBtn" onclick="window.onStartClicked()">ENABLE CAMERA &amp; PLAY</button>
+  </div>
+
+  <canvas id="gameCanvas" width="1200" height="700"></canvas>
+  <video id="videoElement" playsinline></video>
+
+  <div id="cameraPreview">
+    <canvas id="cameraCanvas" width="320" height="180"></canvas>
+  </div>
+
+  <div id="gestureGuide">
+    <b>Current Gesture:</b> <span id="gestureLabel">none</span><br>
+    <b>Challenge Mode:</b><br>
+    ✊ fist &nbsp; 🤘 love &nbsp; 👍 thumbup<br>
+    🔫 gun &nbsp; ✌️ two<br>
+    <b>Normal Mode:</b><br>
+    🤘 love=ice &nbsp; ✌️ two=fire<br>
+    🤙 six=gold &nbsp; ☝️ one=ground
+  </div>
+
+  <!-- MediaPipe CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4/hands.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils@0.3/camera_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils@0.3/drawing_utils.js" crossorigin="anonymous"></script>
+
+  <!-- Game scripts (global scope, load order matters) -->
+  <script src="js/settings.js"></script>
+  <script src="js/assets.js"></script>
+  <script src="js/gesture.js"></script>
+  <script src="js/background.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/challenge/hand.js"></script>
+  <script src="js/challenge/handgesture.js"></script>
+  <script src="js/challenge/medal.js"></script>
+  <script src="js/challenge/challengeGame.js"></script>
+  <script src="js/normal/enemy.js"></script>
+  <script src="js/normal/ball.js"></script>
+  <script src="js/normal/card.js"></script>
+  <script src="js/normal/scrollBar.js"></script>
+  <script src="js/normal/cart.js"></script>
+  <script src="js/normal/collision.js"></script>
+  <script src="js/normal/drag.js"></script>
+  <script src="js/normal/end.js"></script>
+  <script src="js/normal/normalGame.js"></script>
+  <script src="js/records.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
