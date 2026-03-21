@@ -303,7 +303,8 @@ window.onStartClicked = async () => {
     await GestureTracker.init();
     statusEl.textContent = 'Camera connected!';
   } catch(e) {
-    statusEl.textContent = 'Camera not available – using mouse fallback.';
+    console.error('Camera / MediaPipe init failed:', e);
+    statusEl.textContent = `Camera unavailable (${e.message || e}) – using mouse fallback.`;
   }
 
   // Fade out loading overlay

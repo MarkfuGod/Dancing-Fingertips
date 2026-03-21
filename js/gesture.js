@@ -134,8 +134,19 @@ const GestureTracker = (() => {
     if (initialized) return;
     initialized = true;
 
+    // ── STEP 1: ask for camera FIRST ──────────
+    // This guarantees the browser permission dialog fires before
+    // anything MediaPipe-related can throw.
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: { width: 640, height: 360, facingMode: 'user' },
+      audio: false,
+    });
+    videoEl.srcObject = stream;
+    await videoEl.play();
+
+    // ── STEP 2: set up MediaPipe Hands ────────
     handsModel = new Hands({
-      locateFile: f => `https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4/${f}`
+      locateFile: f => `https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4/${f}`,
     });
     handsModel.setOptions({
       maxNumHands:            1,
@@ -145,22 +156,21 @@ const GestureTracker = (() => {
     });
     handsModel.onResults(onResults);
 
-    const stream = await navigator.mediaDevices.getUserMedia({
-      video: { width: 640, height: 360, facingMode: 'user' }, audio: false
-    });
-    videoEl.srcObject = stream;
-    await videoEl.play();
+    // Pre-load WASM / model weights before we start the loop
+    await handsModel.initialize();
 
+    // ── STEP 3: drive inference loop manually ─
+    // (avoids camera_utils conflicts and keeps the code self-contained)
+    camStarted = true;
     if (camPreview) camPreview.style.display = 'block';
     if (guideEl)    guideEl.style.display    = 'block';
 
-    const camera = new Camera(videoEl, {
-      onFrame: async () => { await handsModel.send({ image: videoEl }); },
-      width:  640,
-      height: 360,
-    });
-    camera.start();
-    camStarted = true;
+    async function processFrame() {
+      if (!camStarted) return;
+      try { await handsModel.send({ image: videoEl }); } catch(e) {}
+      requestAnimationFrame(processFrame);
+    }
+    requestAnimationFrame(processFrame);
   }
 
   // Call once per game frame to reset the "changed" flag after it's been read
